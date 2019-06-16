@@ -1,7 +1,7 @@
 package globals
 
 import (
-	"lanChessServer/chesslogic"
+	"SchorChessServer/chesslogic"
 	"sync"
 )
 

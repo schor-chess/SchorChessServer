@@ -1,12 +1,12 @@
 package player
 
 import (
+	"SchorChessServer/chesslogic"
+	"SchorChessServer/globals"
+	"SchorChessServer/util"
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"lanChessServer/chesslogic"
-	"lanChessServer/globals"
-	"lanChessServer/util"
 	"math/rand"
 	"net"
 	"strconv"

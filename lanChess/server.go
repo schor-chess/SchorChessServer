@@ -1,8 +1,8 @@
 package main
 
 import (
-	"lanChessServer/player"
-	"lanChessServer/util"
+	"SchorChessServer/player"
+	"SchorChessServer/util"
 	"net"
 )
 

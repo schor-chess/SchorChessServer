@@ -1,8 +1,8 @@
 package chesslogic
 
 import (
+	"SchorChessServer/util"
 	"fmt"
-	"lanChessServer/util"
 	"strconv"
 	"sync"
 
