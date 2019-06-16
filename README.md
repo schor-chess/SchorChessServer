@@ -22,3 +22,6 @@ Client Threads:
 * How to play:
     * Send moves to one another via channel
 
+### TODO:
+
+* Draw offers!
