@@ -3,6 +3,7 @@ package util
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net"
 )
 
@@ -21,9 +22,13 @@ func SendMessage(conn net.Conn, TypeArg string, ValArg string) {
 }
 
 // Check handles errors
-func Check(err error, message string) {
+func Check(err error, message string) bool {
 	if err != nil {
+		if err == io.EOF {
+			return true
+		}
 		panic(err)
 	}
 	fmt.Printf("%s\n", message)
+	return false
 }

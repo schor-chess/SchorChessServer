@@ -1,10 +1,10 @@
 package chesslogic
 
 import (
-	"SchorChessServer/util"
 	"fmt"
 	"strconv"
 	"sync"
+	"wds/SchorChessServer/util"
 
 	chess "github.com/malbrecht/chess"
 )
@@ -52,10 +52,10 @@ func IsLegalMove(move string, board *chess.Board) (bool, bool, bool, chess.Move)
 
 	fmt.Println("move: " + move)
 	moveObj, err := board.ParseMove(move)
+	fmt.Println(board.Fen())
 	fmt.Println(moveObj)
 	fmt.Println(err)
 	if (err != nil || moveObj == chess.Move{}) {
-		fmt.Println("here")
 		return false, false, false, chess.Move{}
 	}
 

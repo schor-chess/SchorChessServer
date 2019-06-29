@@ -1,9 +1,9 @@
 package main
 
 import (
-	"SchorChessServer/player"
-	"SchorChessServer/util"
 	"net"
+	"wds/SchorChessServer/player"
+	"wds/SchorChessServer/util"
 )
 
 func main() {

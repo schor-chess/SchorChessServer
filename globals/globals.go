@@ -1,8 +1,8 @@
 package globals
 
 import (
-	"SchorChessServer/chesslogic"
 	"sync"
+	"wds/SchorChessServer/chesslogic"
 )
 
 // contains globally available "online" and "seeking" lists

@@ -1,9 +1,6 @@
 package player
 
 import (
-	"SchorChessServer/chesslogic"
-	"SchorChessServer/globals"
-	"SchorChessServer/util"
 	"bufio"
 	"encoding/json"
 	"fmt"
@@ -12,13 +9,20 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"wds/SchorChessServer/chesslogic"
+	"wds/SchorChessServer/globals"
+	"wds/SchorChessServer/util"
 )
 
 // Player starts a new thread for a player
 func Player(conn net.Conn) int {
 	buf := bufio.NewReader(conn)
 	data, err := buf.ReadString('\n')
-	util.Check(err, "credentials read")
+	eof := util.Check(err, "credentials read")
+	if eof {
+		return 0
+	}
+
 	credentials := strings.Split(data, ".")
 	username, pswd := credentials[0], credentials[1]
 
@@ -81,11 +85,12 @@ func repl(conn net.Conn, username string, rating int) int {
 	for {
 
 		data, err := buf.ReadString('\n')
-		util.Check(err, "Read Succeeded")
+		eof := util.Check(err, "Read Succeeded")
+		if eof {
+			break
+		}
 
 		data = strings.TrimSpace(data)
-
-		fmt.Println(data)
 
 		if data == "new game" {
 			// all these numbers will come through data eventually
@@ -109,12 +114,8 @@ func newGame(conn net.Conn, timeControl [2]int, username string, rating int, off
 
 	// look for match on list
 	for i, p := range globals.Seeking {
-		fmt.Println("entered loop")
 		p.Lock()
 		defer p.Unlock()
-
-		fmt.Printf("%d : [%d, %d]", i, p.TimeControl[0], p.TimeControl[1])
-		fmt.Printf("Local : [%d, %d]", timeControl[0], timeControl[1])
 
 		if p.TimeControl == timeControl {
 			if p.Rating > (rating-offset) && p.Rating < (rating+offset) {
@@ -162,8 +163,6 @@ func newGame(conn net.Conn, timeControl [2]int, username string, rating int, off
 		// hang until someone plays you
 		opponentData := <-gameComms
 		board := <-boardComms
-
-		fmt.Println("DONE HANGING")
 
 		//parse the data they send
 		splitData := strings.Split(opponentData, ":")
@@ -220,7 +219,10 @@ func writeMove(buf *bufio.Reader, gameComms chan string, conn net.Conn, board *c
 	defer board.Unlock()
 	for {
 		data, err := buf.ReadString('\n')
-		util.Check(err, "Read move from client")
+		eof := util.Check(err, "Read move from client")
+		if eof {
+			panic(eof)
+		}
 
 		move := strings.TrimSpace(data)
 
@@ -230,7 +232,7 @@ func writeMove(buf *bufio.Reader, gameComms chan string, conn net.Conn, board *c
 		legal, draw, resign, moveObj := chesslogic.IsLegalMove(move, board.Board)
 		if legal {
 			// make move on board
-			board.Board.MakeMove(moveObj)
+			board.Board = board.Board.MakeMove(moveObj)
 
 			checkmate, stalemate := chesslogic.GameIsOver(board.Board)
 			if !(checkmate || stalemate) {
